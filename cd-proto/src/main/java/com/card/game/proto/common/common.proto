@@ -1,0 +1,72 @@
+syntax = "proto3";
+
+package com.card.game.proto.common;
+
+option java_multiple_files = true;
+option java_package = "com.card.game.proto.common";
+
+// ==================== 消息头定义 ====================
+
+/**
+ * 消息头
+ * 每条消息的固定头部，用于路由和追踪
+ */
+message MsgHeader {
+  int32 msgId = 1;        // 消息ID (如 1001=登录请求)
+  int32 version = 2;      // 协议版本号 (当前为1)
+  int64 timestamp = 3;    // 客户端发送时间戳(毫秒)
+  int32 seqId = 4;        // 请求序列号(用于请求-响应匹配)
+  string token = 5;       // 认证Token(登录后可空)
+  int32 compress = 6;     // 压缩标志 (0=不压缩, 1=gzip)
+}
+
+// ==================== 通用响应码定义 ====================
+
+/**
+ * 响应码枚举
+ */
+enum Code {
+  SUCCESS = 0;                    // 成功
+  INVALID_PARAM = 100;            // 参数错误
+  TOKEN_MISSING = 200;            // 缺少Token
+  TOKEN_INVALID = 201;            // Token无效
+  TOKEN_EXPIRED = 202;            // Token已过期
+  USER_NOT_FOUND = 300;           // 用户不存在
+  USER_EXISTS = 301;              // 用户已存在
+  WRONG_PASSWORD = 302;           // 密码错误
+  USER_BANNED = 303;              // 用户被封禁
+  ALREADY_ONLINE = 304;           // 用户已在线
+  SESSION_NOT_FOUND = 400;        // 会话不存在
+  SERVER_BUSY = 900;              // 服务器繁忙
+  INTERNAL_ERROR = 999;           // 服务器内部错误
+}
+
+/**
+ * 通用响应体
+ */
+message CommonResponse {
+  Code code = 1;          // 响应码
+  string message = 2;     // 响应消息
+  int64 timestamp = 3;    // 服务端时间戳
+}
+
+/**
+ * 玩家基础信息
+ */
+message PlayerBaseInfo {
+  int64 playerId = 1;     // 玩家ID
+  string username = 2;    // 用户名
+  string nickname = 3;    // 昵称
+  int32 level = 4;        // 等级
+  string avatar = 5;      // 头像URL
+}
+
+// 玩家会话信息
+message PlayerSession {
+  int64 playerId = 1;
+  string gatewayId = 2;
+  string sessionId = 3;
+  int64 loginTime = 4;
+  int64 lastHeartbeat = 5;
+  int32 status = 6;   // 0-在线, 1-战斗中, 2-匹配中
+}
