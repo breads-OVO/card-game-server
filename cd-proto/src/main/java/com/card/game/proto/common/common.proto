@@ -54,7 +54,7 @@ message CommonResponse {
  * 玩家基础信息
  */
 message PlayerBaseInfo {
-  int64 playerId = 1;     // 玩家ID
+  string playerId = 1;     // 玩家ID
   string username = 2;    // 用户名
   string nickname = 3;    // 昵称
   int32 level = 4;        // 等级

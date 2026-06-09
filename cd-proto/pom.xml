@@ -28,19 +28,6 @@
             <version>${protobuf.version}</version>
         </dependency>
 
-        <dependency>
-            <groupId>io.grpc</groupId>
-            <artifactId>grpc-protobuf</artifactId>
-            <version>${grpc.version}</version>
-        </dependency>
-
-        <!-- gRPC Stub -->
-        <dependency>
-            <groupId>io.grpc</groupId>
-            <artifactId>grpc-stub</artifactId>
-            <version>${grpc.version}</version>
-        </dependency>
-
         <!-- gRPC Netty（服务端/客户端） -->
         <dependency>
             <groupId>io.grpc</groupId>

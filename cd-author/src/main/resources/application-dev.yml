@@ -1,0 +1,20 @@
+# 开发环境配置
+app:
+  env: dev
+  jwt:
+    secret: dev-secret-key-please-change-in-production
+
+server:
+  port: 8091
+
+logging:
+  level:
+    com.game.login: DEBUG
+    org.springframework: INFO
+
+management:
+  health:
+    redis:
+      enabled: false
+    db:
+      enabled: false

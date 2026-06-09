@@ -1,0 +1,112 @@
+# 应用配置
+app:
+  name: author-server
+  version: 1.0.0
+  env: dev
+  jwt:
+    secret: author-server-secret-key-2024
+    expire-days: 7
+    refresh-hours: 24
+  thread-pool:
+    core-pool-size: 4
+    max-pool-size: 16
+    queue-capacity: 500
+    thread-name-prefix: login-worker-
+
+# 服务器配置
+server:
+  port: 8091
+  tomcat:
+    threads:
+      min-spare: 4
+      max: 200
+    connection-timeout: 30000
+  compression:
+    enabled: true
+    mime-types: application/json
+
+# Spring 配置
+spring:
+  application:
+    name: author-server
+# 数据库配置
+  datasource:
+    url: jdbc:mysql://localhost:3306/card_game?useUnicode=true&characterEncoding=utf-8&useSSL=false&serverTimezone=Asia/Shanghai&allowPublicKeyRetrieval=true
+    username: root
+    password: 123456
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    hikari:
+      connection-timeout: 30000
+      maximum-pool-size: 20
+      minimum-idle: 5
+      idle-timeout: 600000
+      pool-name: GameLoginHikariPool
+
+  # JPA 配置
+  jpa:
+    show-sql: true  # 开发环境开启，生产环境关闭
+    hibernate:
+      ddl-auto: update  # 生产环境用 validate，开发可用 update
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.MySQL8Dialect
+        format_sql: true
+        use_sql_comments: true
+        jdbc:
+          batch_size: 20
+    open-in-view: false
+
+    redis:
+      host: localhost
+      port: 6379
+      password:                    # 无密码时留空
+      database: 0                  # 数据库索引
+      timeout: 5000ms              # 连接超时
+
+      # Lettuce 连接池配置
+      lettuce:
+        pool:
+          max-active: 20           # 最大连接数
+          max-idle: 10             # 最大空闲连接
+          min-idle: 5              # 最小空闲连接
+          max-wait: 2000ms         # 获取连接最大等待时间
+        shutdown-timeout: 100ms    # 关闭超时
+
+# gRPC 配置（后续任务使用）
+grpc:
+  server:
+    port: 8090
+    max-inbound-message-size: 10485760  # 10MB
+    keep-alive-time: 30s
+    keep-alive-timeout: 10s
+
+# Actuator 监控配置
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info,metrics
+      base-path: /actuator
+  endpoint:
+    health:
+      show-details: always
+  health:
+    redis:
+      enabled: false  # 后续任务开启
+    db:
+      enabled: false  # 后续任务开启
+
+# 日志配置
+logging:
+  level:
+    com.card.game.author: DEBUG
+    org.springframework: INFO
+    org.hibernate.SQL: DEBUG
+    org.hibernate.type.descriptor.sql.BasicBinder: TRACE
+  pattern:
+    console: "%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg%n"
+    file: "%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg%n"
+  file:
+    name: logs/author-server.log
+    max-size: 100MB
+    max-history: 30

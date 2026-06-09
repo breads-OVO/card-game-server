@@ -1,0 +1,25 @@
+# 生产环境配置
+app:
+  env: prod
+  jwt:
+    secret: ${JWT_SECRET:prod-secret-key-must-be-set-by-env}
+
+server:
+  port: 8091
+  tomcat:
+    accesslog:
+          enabled: true
+          directory: logs
+          pattern: '%h %l %u %t "%r" %s %b'
+
+logging:
+  level:
+    com.game.login: WARN
+    org.springframework: WARN
+
+management:
+  health:
+    redis:
+      enabled: true
+    db:
+      enabled: true

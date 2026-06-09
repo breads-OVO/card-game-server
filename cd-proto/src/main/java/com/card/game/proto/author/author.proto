@@ -43,7 +43,7 @@ message RegisterRequest {
 message RegisterResponse {
   common.Code code = 1;
   string message = 2;
-  int64 playerId = 3;
+  string playerId = 3;
   int64 createTime = 4;
 }
 
@@ -71,14 +71,14 @@ message AuthResponse {
 // Token 校验请求
 message VerifyTokenRequest {
   string token = 1;
-  int64 playerId = 2;         // 可选，用于校验 Token 是否属于该玩家
+  string playerId = 2;         // 可选，用于校验 Token 是否属于该玩家
 }
 
 // Token 校验响应
 message VerifyTokenResponse {
   common.Code code = 1;
   string message = 2;
-  int64 playerId = 3;
+  string playerId = 3;
   string username = 4;
   int64 expireAt = 5;
 }
@@ -98,14 +98,14 @@ message RefreshTokenResponse {
 
 // 登出请求
 message LogoutRequest {
-  int64 playerId = 1;
+  string playerId = 1;
   string token = 2;
   string reason = 3;          // logout-主动, kick-被踢, timeout-超时
 }
 
 // 踢下线请求
 message KickPlayerRequest {
-  int64 playerId = 1;
+  string playerId = 1;
   string kickReason = 2;      // 踢下线原因
   int32 kickCode = 3;         // 踢下线错误码
 }
