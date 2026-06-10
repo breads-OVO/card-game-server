@@ -1,4 +1,4 @@
-package com.card.game.author.config;
+package com.card.game.common.config;
 
 import com.fasterxml.jackson.annotation.JsonAutoDetect;
 import com.fasterxml.jackson.annotation.PropertyAccessor;

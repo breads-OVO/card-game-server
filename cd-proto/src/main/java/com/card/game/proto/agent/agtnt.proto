@@ -46,14 +46,14 @@ message OnlineNotifyRequest {
 
 // 玩家下线通知请求
 message OfflineNotifyRequest {
-  int64 playerId = 1;
+  string playerId = 1;
   string reason = 2;          // logout, kick, timeout, error
   int64 offlineTime = 3;
 }
 
 // 转发业务消息请求
 message ForwardMessageRequest {
-  int64 playerId = 1;
+  string playerId = 1;
   int32 msgId = 2;            // 业务消息ID
   bytes body = 3;             // 消息体（Protobuf序列化）
   int64 timestamp = 4;
@@ -71,7 +71,7 @@ message ForwardMessageResponse {
 
 // 查询玩家状态请求
 message GetPlayerStatusRequest {
-  int64 playerId = 1;
+  string playerId = 1;
 }
 
 // 查询玩家状态响应
@@ -85,14 +85,14 @@ message GetPlayerStatusResponse {
 
 // 批量查询玩家状态请求
 message BatchGetPlayerStatusRequest {
-  repeated int64 playerIds = 1;
+  repeated string playerIds = 1;
 }
 
 // 批量查询玩家状态响应
 message BatchGetPlayerStatusResponse {
   common.Code code = 1;
   string message = 2;
-  map<int64, PlayerStatusItem> players = 3;
+  map<string, PlayerStatusItem> players = 3;
 }
 
 // 玩家状态项
@@ -106,13 +106,13 @@ message PlayerStatusItem {
 message BroadcastMessageRequest {
   int32 msgId = 1;            // 消息ID
   bytes body = 2;             // 消息体
-  repeated int64 excludePlayerIds = 3;  // 排除的玩家ID列表
+  repeated string excludePlayerIds = 3;  // 排除的玩家ID列表
   int32 targetStatus = 4;     // 目标状态：0-全部在线，1-战斗中，2-匹配中（0表示全部）
 }
 
 // 踢玩家下线请求（由Agent发起）
 message KickPlayerRequest {
-  int64 playerId = 1;
+  string playerId = 1;
   string reason = 2;
   int32 kickCode = 3;
 }

@@ -19,7 +19,7 @@ public class TokenCacheService {
     private static final int TOKEN_EXPIRE_DAYS = 7;
     private static final int TOKEN_EXPIRE_SECONDS = TOKEN_EXPIRE_DAYS * 24 * 3600;
 
-    private final RedisService redisService;
+    private final com.card.game.common.service.RedisService redisService;
 
     /**
      * 存储 Token（存储 playerId 和 username）

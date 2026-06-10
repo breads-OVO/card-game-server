@@ -63,7 +63,7 @@ message PlayerBaseInfo {
 
 // 玩家会话信息
 message PlayerSession {
-  int64 playerId = 1;
+  string playerId = 1;
   string gatewayId = 2;
   string sessionId = 3;
   int64 loginTime = 4;

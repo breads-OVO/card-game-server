@@ -1,6 +1,6 @@
-package com.card.game.author.service.impl;
+package com.card.game.common.service.impl;
 
-import com.card.game.author.service.RedisService;
+import com.card.game.common.service.RedisService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.redis.core.RedisTemplate;

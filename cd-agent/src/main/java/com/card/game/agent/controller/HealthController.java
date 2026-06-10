@@ -1,26 +1,29 @@
-package com.card.game.author.controller;
+package com.card.game.agent.controller;
 
-import com.card.game.author.config.AuthorConfig;
+import com.card.game.agent.config.AgentConfig;
+import com.card.game.agent.service.PlayerSessionManagerService;
+import com.card.game.common.controller.BaseHealthController;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import com.card.game.common.controller.BaseHealthController;
+
+import javax.annotation.Resource;
 import java.util.HashMap;
 import java.util.Map;
 
-/**
- * 健康检查端点
- * 用于 Kubernetes 或监控系统检测服务状态
- */
 @Slf4j
 @RestController
 @RequestMapping("/health")
 @RequiredArgsConstructor
 public class HealthController extends BaseHealthController {
 
-    private  AuthorConfig authorConfig;
+    @Resource
+    private AgentConfig agentConfig;
+
+    @Resource
+    private PlayerSessionManagerService sessionManager;
 
     /**
      * 服务信息
@@ -28,9 +31,11 @@ public class HealthController extends BaseHealthController {
     @GetMapping("/info")
     public Map<String, Object> info() {
         Map<String, Object> result = new HashMap<>();
-        result.put("name", authorConfig.getName());
-        result.put("version", authorConfig.getVersion());
-        result.put("env", authorConfig.getEnv());
+        result.put("name", agentConfig.getName());
+        result.put("version", agentConfig.getVersion());
+        result.put("env", agentConfig.getEnv());
+        result.put("instanceId", agentConfig.getInstanceId());
+        result.put("onlinePlayers", sessionManager.getOnlinePlayerCount());
         result.put("timestamp", System.currentTimeMillis());
         return result;
     }
