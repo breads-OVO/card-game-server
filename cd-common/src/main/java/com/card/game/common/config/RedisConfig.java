@@ -4,6 +4,8 @@ import com.fasterxml.jackson.annotation.JsonAutoDetect;
 import com.fasterxml.jackson.annotation.PropertyAccessor;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.jsontype.impl.LaissezFaireSubTypeValidator;
+import jakarta.annotation.PostConstruct;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.redis.connection.RedisConnectionFactory;
@@ -11,12 +13,18 @@ import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.serializer.GenericJackson2JsonRedisSerializer;
 import org.springframework.data.redis.serializer.StringRedisSerializer;
 
+import javax.annotation.Resource;
+
 /**
  * Redis 配置类
  * 配置 RedisTemplate 序列化方式
  */
+@Slf4j
 @Configuration
 public class RedisConfig {
+
+    @Resource
+    private RedisConnectionFactory connectionFactory;
 
     /**
      * 自定义 RedisTemplate
@@ -75,5 +83,26 @@ public class RedisConfig {
 
         template.afterPropertiesSet();
         return template;
+    }
+
+    @PostConstruct
+    public void validateRedisConnection() {
+        try {
+            log.info("正在检查 Redis 连接...");
+
+            // 尝试 ping Redis
+            String result = connectionFactory.getConnection().ping();
+
+            if ("PONG".equals(result)) {
+                log.info(" Redis 连接成功");
+            } else {
+                log.error(" Redis 响应异常: {}", result);
+                throw new IllegalStateException("Redis 连接异常");
+            }
+        } catch (Exception e) {
+            log.error(" Redis 连接失败: {}", e.getMessage());
+            throw new IllegalStateException("Redis 连接失败，请检查 Redis 服务是否启动", e);
+
+        }
     }
 }

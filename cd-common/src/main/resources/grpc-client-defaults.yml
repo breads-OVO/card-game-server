@@ -1,0 +1,19 @@
+grpc:
+  client:
+    author-service:
+      address: 'discovery://author-service'
+      negotiation-type: plaintext
+      enable-keep-alive: true
+      keep-alive-time: 60s
+      keep-alive-timeout: 15s
+      keep-alive-without-calls: true
+      max-inbound-message-size: 10485760
+
+    agent-service:
+      address: 'discovery://agent-service'
+      negotiation-type: plaintext
+      enable-keep-alive: true
+      keep-alive-time: 60s
+      keep-alive-timeout: 15s
+      keep-alive-without-calls: true
+      max-inbound-message-size: 10485760

@@ -1,0 +1,26 @@
+# 应用配置
+app:
+  name: gateway-server
+  version: 1.0.0
+  env: dev
+
+# 服务器配置
+server:
+  port: 8081
+  tomcat:
+    threads:
+      min-spare: 2
+      max: 100
+
+# Spring 配置
+spring:
+  application:
+    name: gateway-server
+  config:
+    import: optional:classpath:grpc-client-defaults.yml
+  profiles:
+    active: dev
+
+# 日志配置
+logging:
+  config: classpath:logback.xml
