@@ -98,7 +98,8 @@ public class EtcdServiceRegistry {
     @PostConstruct
     public void register() {
         try {
-            log.info("正在注册服务到 etcd: {} -> {}:{}", serviceName, serverAddress, serverPort);
+            String resolvedAddress = getServerAddress();
+            log.info("正在注册服务到 etcd: {} -> {}:{}", serviceName, resolvedAddress, serverPort);
 
             // 创建租约（带超时）
             var leaseGrant = etcdClient.getLeaseClient()
@@ -108,8 +109,8 @@ public class EtcdServiceRegistry {
 
             // 服务地址
             String serviceKey = String.format("/services/game/%s/%s:%d",
-                    serviceName, serverAddress, serverPort);
-            String serviceValue = String.format("%s:%d", serverAddress, serverPort);
+                    serviceName, resolvedAddress, serverPort);
+            String serviceValue = String.format("%s:%d", resolvedAddress, serverPort);
 
             // 注册服务（带租约和超时）
             etcdClient.getKVClient().put(

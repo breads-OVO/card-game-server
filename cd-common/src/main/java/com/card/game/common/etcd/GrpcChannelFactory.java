@@ -1,47 +1,83 @@
 package com.card.game.common.etcd;
 
+import io.etcd.jetcd.ByteSequence;
+import io.etcd.jetcd.Client;
+import io.etcd.jetcd.options.GetOption;
 import io.grpc.Channel;
 import io.grpc.ManagedChannel;
 import io.grpc.ManagedChannelBuilder;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 
+import java.nio.charset.StandardCharsets;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.TimeUnit;
 
-/**
- * gRPC 通道工厂
- * 基于 etcd 服务发现创建 gRPC 客户端连接
- */
 @Slf4j
 @Component
 public class GrpcChannelFactory {
 
+    private final Client etcdClient;
     private final Map<String, ManagedChannel> channelCache = new ConcurrentHashMap<>();
 
-    /**
-     * 获取服务通道（带负载均衡）
-     * @param serviceName 服务名称
-     * @return gRPC Channel
-     */
+    public GrpcChannelFactory(Client etcdClient) {
+        this.etcdClient = etcdClient;
+    }
+
     public Channel getChannel(String serviceName) {
         return channelCache.computeIfAbsent(serviceName, name -> {
             log.info("创建 gRPC 通道: serviceName={}", name);
 
-            // 使用 discovery:// 协议，自动通过 SPI 找到 EtcdNameResolverProvider
+            String address = resolveServiceAddress(name);
+            String[] parts = address.split(":");
+            String host = parts[0];
+            int port = Integer.parseInt(parts[1]);
+
             ManagedChannel channel = ManagedChannelBuilder
-                    .forTarget("discovery://" + name)
+                    .forAddress(host, port)
                     .usePlaintext()
                     .build();
 
-            log.info("gRPC 通道创建成功: {}", name);
+            log.info("gRPC 通道创建成功: {} -> {}:{}", name, host, port);
             return channel;
         });
     }
 
-    /**
-     * 关闭所有通道
-     */
+    private String resolveServiceAddress(String serviceName) {
+        ByteSequence prefix = ByteSequence.from(
+                String.format("/services/game/%s/", serviceName).getBytes(StandardCharsets.UTF_8)
+        );
+        log.info("查询 etcd 前缀: /services/game/{}/", serviceName);
+        Exception lastException = null;
+        for (int i = 0; i < 3; i++) {
+            try {
+                if (i > 0) {
+                    Thread.sleep(2000L * i);
+                }
+                var response = etcdClient.getKVClient().get(prefix,
+                        GetOption.newBuilder().withPrefix(prefix).build()).get(5, TimeUnit.SECONDS);
+                var kvs = response.getKvs();
+                log.info("etcd 查询结果: count={}, more={}", kvs.size(), response.isMore());
+                if (!kvs.isEmpty()) {
+                    for (var kv : kvs) {
+                        log.info("  etcd key: {}, value: {}",
+                                new String(kv.getKey().getBytes(), StandardCharsets.UTF_8),
+                                new String(kv.getValue().getBytes(), StandardCharsets.UTF_8));
+                    }
+                    String value = new String(kvs.get(0).getValue().getBytes(), StandardCharsets.UTF_8);
+                    log.info("从 etcd 解析服务地址: {} -> {}", serviceName, value);
+                    return value;
+                }
+                log.warn("第 {} 次查询 etcd 未找到服务: {}", i + 1, serviceName);
+            } catch (Exception e) {
+                lastException = e;
+                log.warn("第 {} 次查询 etcd 失败: {}", i + 1, e.getMessage());
+            }
+        }
+        throw new RuntimeException("从 etcd 解析服务地址失败: " + serviceName, lastException);
+    }
+
     public void shutdown() {
         channelCache.values().forEach(channel -> {
             try {

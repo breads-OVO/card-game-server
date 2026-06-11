@@ -15,7 +15,7 @@ message MsgHeader {
   string msgId = 1;        // 消息ID (如 1001=登录请求)
   int32 version = 2;      // 协议版本号 (当前为1)
   int64 timestamp = 3;    // 客户端发送时间戳(毫秒)
-  int32 seqId = 4;        // 请求序列号(用于请求-响应匹配)
+  string seqId = 4;        // 请求序列号(用于请求-响应匹配)
   string token = 5;       // 认证Token(登录后可空)
   int32 compress = 6;     // 压缩标志 (0=不压缩, 1=gzip)
 }
@@ -44,6 +44,9 @@ enum Code {
 enum MessageType{
   // 未知类型
   UNKNOWN = 0;
+
+  //心跳
+  HEART_BEAT = 1;
 
   // ========== Author服务 (10xx) ==========
   AUTH_REGISTER_REQUEST = 1001;      // 注册请求

@@ -1,17 +1,24 @@
 package com.card.game.gateway.service.impl;
 
+import com.card.game.common.client.AuthorGrpcClient;
 import com.card.game.common.util.IdGenerator;
 import com.card.game.gateway.service.MessageHandler;
+import com.card.game.gateway.util.MessageUtils;
+import com.card.game.proto.author.RegisterRequest;
+import com.card.game.proto.author.RegisterResponse;
 import com.card.game.proto.common.Code;
 import com.card.game.proto.common.GameMessage;
 import com.card.game.proto.common.MessageType;
 import com.card.game.proto.author.AuthRequest;
 import com.card.game.proto.author.AuthResponse;
+import com.google.protobuf.ByteString;
 import com.google.protobuf.InvalidProtocolBufferException;
 import io.netty.channel.ChannelHandlerContext;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
+
+import javax.annotation.Resource;
 
 /**
  * 认证消息处理器
@@ -22,8 +29,8 @@ import org.springframework.stereotype.Component;
 @RequiredArgsConstructor
 public class AuthMessageHandler implements MessageHandler {
 
-    // TODO: 注入 Login gRPC 客户端
-    // private final LoginServiceGrpc.LoginServiceBlockingStub loginServiceStub;
+    @Resource
+    private AuthorGrpcClient authorGrpcClient;
 
     @Override
     public String getMessageTypePrefix() {
@@ -97,10 +104,12 @@ public class AuthMessageHandler implements MessageHandler {
     /**
      * 处理注册请求
      */
-    private void handleRegister(ChannelHandlerContext ctx, GameMessage message) {
+    private void handleRegister(ChannelHandlerContext ctx, GameMessage message) throws InvalidProtocolBufferException {
         log.info("收到注册请求");
-        // TODO: 实现注册逻辑
-        sendErrorResponse(ctx, message, Code.SERVER_BUSY, "功能开发中");
+        RegisterRequest request = RegisterRequest.parseFrom(message.getBody());
+        RegisterResponse response = authorGrpcClient.register(request);
+        ByteString body = response.toByteString();
+        MessageUtils.sendMessage(ctx, message, body);
     }
 
     /**

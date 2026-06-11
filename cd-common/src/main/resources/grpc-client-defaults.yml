@@ -1,7 +1,7 @@
 grpc:
   client:
     author-service:
-      address: 'discovery://author-service'
+      address: 'discovery://author-server'
       negotiation-type: plaintext
       enable-keep-alive: true
       keep-alive-time: 60s
@@ -10,7 +10,7 @@ grpc:
       max-inbound-message-size: 10485760
 
     agent-service:
-      address: 'discovery://agent-service'
+      address: 'discovery://agent-server'
       negotiation-type: plaintext
       enable-keep-alive: true
       keep-alive-time: 60s

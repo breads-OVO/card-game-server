@@ -11,7 +11,7 @@ import org.springframework.scheduling.annotation.EnableScheduling;
  * author-server 服务启动类
  */
 @Slf4j
-@SpringBootApplication
+@SpringBootApplication(scanBasePackages = "com.card.game")
 @EnableConfigurationProperties
 @EnableScheduling
 @EnableJpaRepositories(basePackages = "com.card.game.author.repository")

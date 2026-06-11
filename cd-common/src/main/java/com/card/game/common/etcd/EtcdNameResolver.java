@@ -1,6 +1,7 @@
 package com.card.game.common.etcd;
 
 import io.etcd.jetcd.ByteSequence;
+import io.etcd.jetcd.options.GetOption;
 import io.grpc.*;
 import io.etcd.jetcd.Client;
 import io.etcd.jetcd.watch.WatchEvent;
@@ -44,7 +45,8 @@ public class EtcdNameResolver extends NameResolver {
             ByteSequence prefix = ByteSequence.from(
                     String.format("/services/game/%s/", serviceName).getBytes()
             );
-            var response = etcdClient.getKVClient().get(prefix).get();
+            var response = etcdClient.getKVClient().get(prefix,
+                        GetOption.newBuilder().withPrefix(prefix).build()).get();
 
             List<EquivalentAddressGroup> addresses = response.getKvs().stream()
                     .map(kv -> new String(kv.getValue().getBytes()))
