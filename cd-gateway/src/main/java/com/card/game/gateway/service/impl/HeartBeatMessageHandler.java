@@ -1,8 +1,11 @@
 package com.card.game.gateway.service.impl;
 
 import com.card.game.gateway.service.MessageHandler;
+import com.card.game.gateway.util.MessageUtils;
+import com.card.game.proto.common.Code;
+import com.card.game.proto.common.CommonResponse;
 import com.card.game.proto.common.GameMessage;
-import com.card.game.proto.common.MsgHeader;
+import com.google.protobuf.ByteString;
 import io.netty.channel.ChannelHandlerContext;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -18,9 +21,12 @@ import org.springframework.stereotype.Component;
 public class HeartBeatMessageHandler implements MessageHandler {
     @Override
     public void handle(ChannelHandlerContext ctx, GameMessage message) {
-//        log.debug("收到心跳消息");
-        MsgHeader header = message.getHeader();
-//        log.debug("心跳消息头: {}", header);
+        CommonResponse response = CommonResponse.newBuilder()
+                .setCode(Code.SUCCESS)
+                .setMessage(String.valueOf(System.currentTimeMillis()))
+                .build();
+        ByteString body = response.toByteString();
+        MessageUtils.sendMessage(ctx, message, body);
     }
 
     @Override

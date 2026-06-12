@@ -50,7 +50,6 @@ public class AgentGrpcServiceImpl extends AgentServiceGrpc.AgentServiceImplBase 
             responseObserver.onNext(CommonResponse.newBuilder()
                     .setCode(Code.INVALID_PARAM)
                     .setMessage("玩家信息无效")
-                    .setTimestamp(System.currentTimeMillis())
                     .build());
             responseObserver.onCompleted();
             return;
@@ -65,7 +64,6 @@ public class AgentGrpcServiceImpl extends AgentServiceGrpc.AgentServiceImplBase 
         CommonResponse response = CommonResponse.newBuilder()
                 .setCode(success ? Code.SUCCESS : Code.INTERNAL_ERROR)
                 .setMessage(success ? "玩家上线成功" : "玩家上线失败")
-                .setTimestamp(System.currentTimeMillis())
                 .build();
 
         responseObserver.onNext(response);
@@ -84,7 +82,6 @@ public class AgentGrpcServiceImpl extends AgentServiceGrpc.AgentServiceImplBase 
         CommonResponse response = CommonResponse.newBuilder()
                 .setCode(success ? Code.SUCCESS : Code.INTERNAL_ERROR)
                 .setMessage(success ? "玩家下线成功" : "玩家下线失败")
-                .setTimestamp(System.currentTimeMillis())
                 .build();
 
         responseObserver.onNext(response);
@@ -192,7 +189,6 @@ public class AgentGrpcServiceImpl extends AgentServiceGrpc.AgentServiceImplBase 
         CommonResponse response = CommonResponse.newBuilder()
                 .setCode(Code.SUCCESS)
                 .setMessage(String.format("广播消息已发送，目标玩家数=%d", targetCount))
-                .setTimestamp(System.currentTimeMillis())
                 .build();
 
         responseObserver.onNext(response);
@@ -209,7 +205,6 @@ public class AgentGrpcServiceImpl extends AgentServiceGrpc.AgentServiceImplBase 
         CommonResponse response = CommonResponse.newBuilder()
                 .setCode(success ? Code.SUCCESS : Code.INTERNAL_ERROR)
                 .setMessage(success ? "踢下线成功" : "踢下线失败")
-                .setTimestamp(System.currentTimeMillis())
                 .build();
 
         responseObserver.onNext(response);

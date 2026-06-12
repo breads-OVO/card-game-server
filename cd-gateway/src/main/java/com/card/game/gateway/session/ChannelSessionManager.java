@@ -79,7 +79,7 @@ public class ChannelSessionManager {
     /**
      * 解绑玩家
      */
-    public void unbindPlayer(Long playerId) {
+    public void unbindPlayer(String playerId) {
         Channel channel = playerChannelMap.remove(playerId);
         if (channel != null) {
             channelPlayerMap.remove(channel.id());
@@ -90,7 +90,7 @@ public class ChannelSessionManager {
     /**
      * 根据玩家ID获取连接
      */
-    public Channel getChannelByPlayerId(Long playerId) {
+    public Channel getChannelByPlayerId(String playerId) {
         return playerChannelMap.get(playerId);
     }
 
@@ -118,7 +118,7 @@ public class ChannelSessionManager {
     /**
      * 判断玩家是否在线
      */
-    public boolean isPlayerOnline(Long playerId) {
+    public boolean isPlayerOnline(String playerId) {
         return playerChannelMap.containsKey(playerId);
     }
 
@@ -132,7 +132,7 @@ public class ChannelSessionManager {
     /**
      * 踢掉指定玩家的连接
      */
-    public void kickPlayer(Long playerId) {
+    public void kickPlayer(String playerId) {
         Channel channel = playerChannelMap.get(playerId);
         if (channel != null && channel.isActive()) {
             channel.close();

@@ -1,8 +1,10 @@
 package com.card.game.gateway.server.handler;
 
+import com.card.game.common.client.AgentGrpcClient;
 import com.card.game.gateway.service.MessageHandler;
 import com.card.game.gateway.service.MessageHandlerFactory;
 import com.card.game.gateway.session.ChannelSessionManager;
+import com.card.game.proto.agent.OfflineNotifyRequest;
 import com.card.game.proto.common.GameMessage;
 import com.card.game.proto.common.MessageType;
 import io.netty.channel.ChannelHandler;
@@ -34,6 +36,9 @@ public class ServerChannelHandler extends ChannelInboundHandlerAdapter {
     @Resource
     private  MessageHandlerFactory handlerFactory;
 
+    @Resource
+    private  AgentGrpcClient agentGrpcClient;
+
     @Override
     public void channelActive(ChannelHandlerContext ctx) {
         String clientAddr = getClientAddress(ctx);
@@ -50,8 +55,17 @@ public class ServerChannelHandler extends ChannelInboundHandlerAdapter {
 
         // 触发玩家下线处理
         if (playerId != null) {
+            try {
+                OfflineNotifyRequest notifyRequest = OfflineNotifyRequest.newBuilder()
+                        .setPlayerId(playerId)
+                        .setReason("disconnect")
+                        .setOfflineTime(System.currentTimeMillis())
+                        .build();
+                agentGrpcClient.notifyPlayerOffline(notifyRequest);
+            } catch (Exception e) {
+                log.error("通知 Agent 玩家下线失败: playerId={}", playerId, e);
+            }
             sessionManager.removeChannel(ctx.channel());
-            // TODO: 调用 Login/Agent 下线通知
         } else {
             sessionManager.removeChannel(ctx.channel());
         }
