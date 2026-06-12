@@ -75,6 +75,10 @@ enum MessageType{
   AGENT_BROADCAST_REQUEST = 2009;        // 广播消息
   AGENT_KICK_PLAYER_REQUEST = 2010;      // 踢玩家下线
 
+  // ========== Match 服务 (30xx) ==========
+  MATCH_START_REQUEST = 3001;           // 匹配开始请求
+  MATCH_CANCEL_REQUEST = 3002;          // 匹配取消请求
+  MATCH_STATUS_QUERY = 3005;            // 匹配状态查询
 }
 
 /**

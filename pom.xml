@@ -21,6 +21,8 @@
         <module>cd-agent</module>
         <module>cd-author</module>
         <module>cd-proto</module>
+        <module>cd-match</module>
+        <module>cd-game</module>
     </modules>
 
     <properties>

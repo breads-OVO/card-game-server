@@ -1,0 +1,11 @@
+package com.card.game.proto.author;
+
+import "match/match.proto";
+
+option java_multiple_files = true;
+option java_package = "com.card.game.proto.match";
+
+service MatchService {
+  rpc MatchDoudizhu(MatchDoudizhuRequest) returns (MatchDoudizhuResponse); // 斗地主匹配
+  rpc MatchJunzheng(MatchJunzhengRequest) returns (MatchJunzhengResponse); // 军争
+}

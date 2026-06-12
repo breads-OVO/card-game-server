@@ -1,0 +1,51 @@
+syntax = "proto3";
+
+package com.card.game.proto.author;
+
+import "common/common.proto";
+import "game/game.proto";
+
+option java_multiple_files = true;
+option java_package = "com.card.game.proto.match";
+
+/**
+ * 匹配通用请求
+ */
+message MatchCommonRequest {
+  GameType gameType = 1;        // 游戏类型
+  string playerId = 2;          // 玩家id
+}
+/**
+ * 匹配通用响应
+ */
+message MatchCommonResponse {
+  string roomId = 1;
+}
+
+/**
+ * 斗地主匹配请求
+ */
+message MatchDoudizhuRequest {
+  MatchCommonRequest common = 1;
+}
+/**
+ * 斗地主匹配响应
+ */
+message MatchDoudizhuResponse {
+  MatchCommonResponse common = 1;
+}
+
+/**
+ * 军争匹配请求
+*/
+message MatchJunzhengRequest {
+  MatchCommonRequest common = 1;
+}
+/**
+ * 军争匹配响应
+ */
+message MatchJunzhengResponse {
+  MatchCommonResponse common = 1;
+}
+
+
