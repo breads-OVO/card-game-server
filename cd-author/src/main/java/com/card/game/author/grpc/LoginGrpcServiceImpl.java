@@ -146,15 +146,15 @@ public class LoginGrpcServiceImpl extends LoginServiceGrpc.LoginServiceImplBase 
     }
 
     @Override
-    public void logout(LogoutRequest request, StreamObserver<CommonResponse> responseObserver) {
+    public void logout(LogoutRequest request, StreamObserver<LogoutResponse> responseObserver) {
         log.info("收到登出请求: playerId={}, reason={}", request.getPlayerId(), request.getReason());
 
         boolean success = authService.logout(request.getPlayerId(), request.getToken(), request.getReason());
 
-        CommonResponse response = CommonResponse.newBuilder()
+
+        LogoutResponse response = LogoutResponse.newBuilder()
                 .setCode(success ? Code.SUCCESS : Code.INTERNAL_ERROR)
                 .setMessage(success ? "登出成功" : "登出失败")
-                .setTimestamp(System.currentTimeMillis())
                 .build();
 
         responseObserver.onNext(response);
@@ -170,7 +170,6 @@ public class LoginGrpcServiceImpl extends LoginServiceGrpc.LoginServiceImplBase 
         CommonResponse response = CommonResponse.newBuilder()
                 .setCode(success ? Code.SUCCESS : Code.INTERNAL_ERROR)
                 .setMessage(success ? "踢下线成功" : "踢下线失败")
-                .setTimestamp(System.currentTimeMillis())
                 .build();
 
         responseObserver.onNext(response);

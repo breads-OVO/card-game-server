@@ -53,9 +53,9 @@ public class TokenCacheService {
     /**
      * 获取 Token 对应的玩家ID
      */
-    public Long getPlayerIdByToken(String token) {
+    public String getPlayerIdByToken(String token) {
         String[] info = getTokenInfo(token);
-        return info != null ? Long.parseLong(info[0]) : null;
+        return info != null ? info[0] : null;
     }
 
     /**
@@ -81,7 +81,7 @@ public class TokenCacheService {
         redisService.expire(key, TOKEN_EXPIRE_SECONDS, TimeUnit.SECONDS);
 
         // 获取 playerId 并刷新玩家 Token 映射
-        Long playerId = getPlayerIdByToken(token);
+        String playerId = getPlayerIdByToken(token);
         if (playerId != null) {
             String playerKey = PLAYER_TOKEN_PREFIX + playerId;
             redisService.expire(playerKey, TOKEN_EXPIRE_SECONDS, TimeUnit.SECONDS);
@@ -94,7 +94,7 @@ public class TokenCacheService {
      * 删除 Token
      */
     public void deleteToken(String token) {
-        Long playerId = getPlayerIdByToken(token);
+        String playerId = getPlayerIdByToken(token);
 
         String key = TOKEN_PREFIX + token;
         redisService.delete(key);

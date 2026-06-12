@@ -105,16 +105,16 @@ public class AuthorGrpcClient {
      * @param request 登出请求消息
      * @return 是否成功
      */
-    public boolean logout(LogoutRequest request) {
+    public LogoutResponse logout(LogoutRequest request) {
         try {
             log.info("发起登出请求: playerId={}, reason={}",
                     request.getPlayerId(), request.getReason());
-            CommonResponse response = getStub().logout(request);
+            LogoutResponse response = getStub().logout(request);
             log.info("登出响应: playerId={}, code={}", request.getPlayerId(), response.getCode());
-            return response.getCode() == Code.SUCCESS;
+            return response;
         } catch (Exception e) {
             log.error("登出请求失败: playerId={}", request.getPlayerId(), e);
-            return false;
+            throw new RuntimeException("登出服务调用失败", e);
         }
     }
 

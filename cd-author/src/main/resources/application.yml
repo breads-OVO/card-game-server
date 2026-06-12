@@ -4,7 +4,7 @@ app:
   version: 1.0.0
   env: dev
   jwt:
-    secret: author-server-secret-key-2024
+    secret: EScPnGep5uh-NdGtKwvfGn6Jrrnh9f-vK2THex7Jb4A
     expire-days: 7
     refresh-hours: 24
   thread-pool:
