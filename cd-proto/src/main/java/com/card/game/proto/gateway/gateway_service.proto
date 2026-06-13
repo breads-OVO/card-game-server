@@ -1,0 +1,21 @@
+package com.card.game.proto.author;
+
+import "common/common.proto";
+import "gateway/gateway.proto";
+
+option java_multiple_files = true;
+option java_package = "com.card.game.proto.gateway";
+
+service GatewayService {
+  // 推送消息给指定玩家
+  rpc PushToPlayer(gateway.PushToPlayerRequest) returns (common.CommonResponse);
+
+  // 推送消息给所有玩家
+  rpc PushToAll(gateway.PushToAllRequest) returns (common.CommonResponse);
+
+  // 推送消息给指定玩家组
+  rpc PushToPlayerGroup(gateway.PushToPlayerGroupRequest) returns (common.CommonResponse);
+}
+
+
+

@@ -2,11 +2,18 @@ syntax = "proto3";
 
 package com.card.game.proto.author;
 
-import "common/common.proto";
 import "game/game.proto";
 
 option java_multiple_files = true;
 option java_package = "com.card.game.proto.match";
+
+enum MatchStatus {
+  MATCHING = 0;     // 匹配中
+  SUCCESS = 1;      // 匹配成功
+  FAIL = 2;         // 匹配失败
+  CANCEL = 3;       // 匹配取消
+  TIMEOUT = 4;      // 匹配超时
+}
 
 /**
  * 匹配通用请求
@@ -14,38 +21,47 @@ option java_package = "com.card.game.proto.match";
 message MatchCommonRequest {
   GameType gameType = 1;        // 游戏类型
   string playerId = 2;          // 玩家id
+  oneof matchRequest {
+    MatchDoudizhuRequest doudizhu = 3;
+    MatchJunzhengRequest junzheng = 4;
+  }
 }
 /**
  * 匹配通用响应
  */
 message MatchCommonResponse {
-  string roomId = 1;
+  MatchStatus status = 1;
+  string roomId = 2;
+  oneof matchResult {
+    MatchDoudizhuResponse doudizhu = 3;
+    MatchJunzhengResponse junzheng = 4;
+  }
 }
 
 /**
  * 斗地主匹配请求
  */
 message MatchDoudizhuRequest {
-  MatchCommonRequest common = 1;
+
 }
 /**
  * 斗地主匹配响应
  */
 message MatchDoudizhuResponse {
-  MatchCommonResponse common = 1;
+
 }
 
 /**
  * 军争匹配请求
 */
 message MatchJunzhengRequest {
-  MatchCommonRequest common = 1;
+
 }
 /**
  * 军争匹配响应
  */
 message MatchJunzhengResponse {
-  MatchCommonResponse common = 1;
+
 }
 
 

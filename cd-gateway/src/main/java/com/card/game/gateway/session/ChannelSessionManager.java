@@ -6,6 +6,8 @@ import io.netty.channel.ChannelId;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 
+import java.util.List;
+import java.util.Objects;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicInteger;
 
@@ -92,6 +94,23 @@ public class ChannelSessionManager {
      */
     public Channel getChannelByPlayerId(String playerId) {
         return playerChannelMap.get(playerId);
+    }
+
+    /**
+     * 获取所有连接
+     */
+    public Iterable<Channel> getAllChannels() {
+        return channels.values();
+    }
+
+    /**
+     * 根据玩家id列表获取连接
+     */
+    public Iterable<Channel> getChannelsByPlayerIds(List<String> playerIds) {
+        return playerIds.stream()
+                .map(playerChannelMap::get)
+                .filter(Objects::nonNull)
+                .toList();
     }
 
     /**

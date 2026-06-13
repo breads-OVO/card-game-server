@@ -1,0 +1,43 @@
+# 应用配置
+app:
+  name: match-server
+  version: 1.0.0
+  env: dev
+  match:
+    queue-scan-interval: 2000
+    max-wait-seconds: 120
+    initial-score-range: 200
+    score-range-expand-step: 100
+    score-range-expand-interval: 10
+    game-create-retry-count: 3
+    default-rating: 1200
+    max-score-range: 1000
+    elo-k-factor: 32
+  thread-pool:
+    core-pool-size: 4
+    max-pool-size: 16
+    queue-capacity: 500
+    thread-name-prefix: match-worker-
+
+# 服务器配置
+server:
+  port: 8005
+  tomcat:
+    threads:
+      min-spare: 4
+      max: 200
+    connection-timeout: 30000
+  compression:
+    enabled: true
+    mime-types: application/json
+
+# Spring 配置
+spring:
+  application:
+    name: match-server
+  profiles:
+    active: dev
+
+# 日志配置
+logging:
+  config: classpath:logback.xml

@@ -2,8 +2,6 @@ syntax = "proto3";
 
 package com.card.game.proto.author;
 
-import "common/common.proto";
-
 option java_multiple_files = true;
 option java_package = "com.card.game.proto.game";
 
@@ -15,4 +13,5 @@ enum GameType {
   GAME_TYPE_UNKNOWN = 0;
   GAME_TYPE_DOU_DI_ZHU = 1;         //斗地主
   GAME_TYPE_JUN_ZHENG = 2;          //军争
+
 }

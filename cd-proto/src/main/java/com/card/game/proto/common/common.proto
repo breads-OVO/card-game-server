@@ -78,7 +78,8 @@ enum MessageType{
   // ========== Match 服务 (30xx) ==========
   MATCH_START_REQUEST = 3001;           // 匹配开始请求
   MATCH_CANCEL_REQUEST = 3002;          // 匹配取消请求
-  MATCH_STATUS_QUERY = 3005;            // 匹配状态查询
+  MATCH_STATUS_QUERY = 3003;            // 匹配状态查询
+  MATCH_STATUS_QUERY_RESPONSE = 3004;   // 匹配状态查询响应
 }
 
 /**
