@@ -1,0 +1,53 @@
+syntax = "proto3";
+
+package com.card.game.proto.agent;
+
+import "agent/agent.proto";
+import "common/common.proto";
+
+option java_multiple_files = true;
+option java_package = "com.card.game.proto.agent";
+
+/**
+ * Agent 服务 — 会话注册中心 + 推送路由器
+ */
+service AgentService {
+
+  /**
+   * 玩家上线通知
+   * Gateway 在客户端接入并认证通过后调用，注册玩家会话
+   */
+  rpc NotifyPlayerOnline(OnlineNotifyRequest) returns (common.CommonResponse);
+
+  /**
+   * 玩家下线通知
+   * Gateway 在连接断开或调用 Agent.KickPlayer 后调用，清理会话
+   */
+  rpc NotifyPlayerOffline(OfflineNotifyRequest) returns (common.CommonResponse);
+
+
+  /**
+   * 查询单个玩家状态
+   */
+  rpc GetPlayerStatus(GetPlayerStatusRequest) returns (GetPlayerStatusResponse);
+
+  /**
+   * 批量查询玩家状态
+   */
+  rpc BatchGetPlayerStatus(BatchGetPlayerStatusRequest) returns (BatchGetPlayerStatusResponse);
+
+  /**
+   * 推送消息给指定玩家
+   */
+  rpc PushToPlayer(PushToPlayerRequest) returns (PushToPlayerResponse);
+
+  /**
+   * 广播消息给所有（或筛选条件）在线玩家
+   */
+  rpc BroadcastMessage(BroadcastMessageRequest) returns (common.CommonResponse);
+
+  /**
+   * 踢玩家下线
+   */
+  rpc KickPlayer(KickPlayerRequest) returns (common.CommonResponse);
+}

@@ -1,6 +1,6 @@
 syntax = "proto3";
 
-package com.card.game.proto.author;
+package com.card.game.proto.game;
 
 option java_multiple_files = true;
 option java_package = "com.card.game.proto.game";

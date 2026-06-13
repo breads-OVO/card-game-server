@@ -66,8 +66,8 @@ enum MessageType{
   // ========== Agent 服务 (20xx) ==========
   AGENT_PLAYER_ONLINE_REQUEST = 2001;    // 玩家上线通知
   AGENT_PLAYER_OFFLINE_REQUEST = 2002;   // 玩家下线通知
-  AGENT_FORWARD_MESSAGE_REQUEST = 2003;  // 转发消息请求
-  AGENT_FORWARD_MESSAGE_RESPONSE = 2004; // 转发消息响应
+  AGENT_PUSH_TO_PLAYER_REQUEST = 2003;   // 推送消息给指定玩家（v2 替换旧的 ForwardMessage）
+  AGENT_PUSH_TO_PLAYER_RESPONSE = 2004;  // 推送消息响应
   AGENT_GET_PLAYER_STATUS_REQUEST = 2005;    // 查询玩家状态请求
   AGENT_GET_PLAYER_STATUS_RESPONSE = 2006;   // 查询玩家状态响应
   AGENT_BATCH_GET_PLAYER_STATUS_REQUEST = 2007;  // 批量查询玩家状态

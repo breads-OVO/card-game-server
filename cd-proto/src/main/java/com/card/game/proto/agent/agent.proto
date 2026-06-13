@@ -1,0 +1,112 @@
+syntax = "proto3";
+
+package com.card.game.proto.agent;
+
+import "common/common.proto";
+
+option java_multiple_files = true;
+option java_package = "com.card.game.proto.agent";
+
+/**
+ * 玩家上线通知请求
+ * Gateway 在客户端登录成功、绑定 Channel 后调用
+ */
+message OnlineNotifyRequest {
+  string playerId = 1;                  // 玩家 ID
+  common.PlayerBaseInfo playerInfo = 2; // 玩家基本信息
+  string gatewayId = 3;                 // 玩家所在 Gateway 实例 ID
+  string sessionId = 4;                 // 会话 ID
+  int64 loginTime = 5;                  // 登录时间戳（毫秒）
+  string token = 6;                     // 认证 Token
+}
+
+/**
+ * 玩家下线通知请求
+ * Gateway 在连接断开或 Agent 主动踢下线时调用
+ */
+message OfflineNotifyRequest {
+  string playerId = 1;                  // 玩家 ID
+  string reason = 2;                    // 下线原因: logout / kick / timeout / disconnect
+  int64 offlineTime = 3;                // 下线时间戳（毫秒）
+}
+
+/**
+ * 查询玩家状态请求
+ */
+message GetPlayerStatusRequest {
+  string playerId = 1;
+}
+
+/**
+ * 查询玩家状态响应
+ */
+message GetPlayerStatusResponse {
+  common.Code code = 1;
+  string message = 2;
+  bool online = 3;                      // 是否在线
+  common.PlayerSession session = 4;     // 会话详情（在线时有值）
+  int64 offlineTime = 5;                // 离线时间（离线时有值）
+}
+
+/**
+ * 批量查询玩家状态请求
+ */
+message BatchGetPlayerStatusRequest {
+  repeated string playerIds = 1;
+}
+
+/**
+ * 批量查询玩家状态响应
+ */
+message BatchGetPlayerStatusResponse {
+  common.Code code = 1;
+  string message = 2;
+  map<string, PlayerStatusItem> players = 3;
+}
+
+/**
+ * 玩家状态项（批量查询结果中的单项）
+ */
+message PlayerStatusItem {
+  bool online = 1;
+  common.PlayerSession session = 2;
+  int64 offlineTime = 3;
+}
+
+
+/**
+ * 推送消息给指定玩家请求
+ * 业务服务（Game/Match）通过 Agent 路由到玩家所在 Gateway，最终推送给客户端
+ */
+message PushToPlayerRequest {
+  string playerId = 1;                  // 目标玩家 ID
+  common.GameMessage message = 2;       // 完整的 GameMessage 信封（含 MessageType + body）
+}
+
+/**
+ * 推送消息响应
+ */
+message PushToPlayerResponse {
+  common.Code code = 1;
+  string message = 2;
+}
+
+/**
+ * 广播消息请求
+ * 向所有（或满足条件的）在线玩家推送消息
+ */
+message BroadcastMessageRequest {
+  common.GameMessage message = 1;               // 完整的 GameMessage 信封
+  repeated string excludePlayerIds = 2;         // 排除的玩家 ID 列表
+  int32 targetPlayerStatus = 3;                 // 目标玩家状态筛选: 0-全部, 1-战斗中, 2-匹配中
+}
+
+
+/**
+ * 踢玩家下线请求
+ */
+message KickPlayerRequest {
+  string playerId = 1;
+  string reason = 2;                    // 踢下线原因
+  int32 kickCode = 3;                   // 原因码
+}

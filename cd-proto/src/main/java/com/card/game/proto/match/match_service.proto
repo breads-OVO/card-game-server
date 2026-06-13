@@ -1,4 +1,4 @@
-package com.card.game.proto.author;
+package com.card.game.proto.match;
 
 import "match/match.proto";
 
